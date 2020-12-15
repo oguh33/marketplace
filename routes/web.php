@@ -16,11 +16,11 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/model', function(){
-    
+
     //$products = \App\Product::all(); // select * from Products
 
     // Ao instanciar como um novo objeto o metodo save ira salvar um novo registro.
-    //$user = new \App\User(); 
+    //$user = new \App\User();
     // Ao buscar um registro e usar o metodo save ira editar o registro.
     //$user = \App\User::find(1);
     //$user->save(); //Salva os dados acima no banco de forma automatica
@@ -39,7 +39,7 @@ Route::get('/model', function(){
     // 'email' => 'email@gmail.com',
     // 'password' => bcrypt('1233445566')
     //  ]);
-     
+
     // EDITANDO COM MASS UPDATE
     // $user = \App\User::find(83);
     // $user->update([
@@ -54,8 +54,8 @@ Route::get('/model', function(){
     //     'mobile_phone' => 'xx xxxx-xxx',
     //     'phone' => 'xx xxxx-xxx',
     //     'slug' => 'nome-da-loja',
-    // ]);    
-    
+    // ]);
+
     //Criar um produto para uma loja
     // $store = \App\Store::find(41);
     // $product = $store->products()->create([
@@ -64,7 +64,7 @@ Route::get('/model', function(){
     //     'body' => 'Uma descrição com detalhes inclusive html',
     //     'price' => 2999.90,
     //     'slug' => 'notebook-dell',
-    // ]);    
+    // ]);
 
     //Criar uma categoria
     // \App\Category::create([
@@ -72,7 +72,7 @@ Route::get('/model', function(){
     //          'description' => null,
     //          'slug' => 'games',
     //  ]);
-    
+
     //  \App\Category::create([
     //          'name' => 'Notebooks',
     //          'description' => null,
@@ -101,9 +101,9 @@ Route::get('/model', function(){
  */
 
  Route::group(['middleware'=> ['auth']], function(){
-     
+
      Route::prefix('admin')->name('admin.')->namespace('Admin')->group(function(){
-         
+
          /* Route::prefix('stores')->name('stores.')->group(function(){
 
              Route::get('/', 'StoreController@index')->name('index');
@@ -112,13 +112,15 @@ Route::get('/model', function(){
              Route::get('/{store}/edit', 'StoreController@edit')->name('edit');
              Route::post('/update/{store}', 'StoreController@update')->name('update');
              Route::get('/destroy/{store}', 'StoreController@destroy')->name('destroy');
-             
+
             }); */
-            
-            
+
+
         Route::resource('stores', 'StoreController');
         Route::resource('products', 'ProductController');
-    
+        Route::resource('categories', 'CategoryController');
+
+        Route::post('photo/remove', 'ProductPhotoController@removePhoto')->name('photo.remove');
     });
 });
 

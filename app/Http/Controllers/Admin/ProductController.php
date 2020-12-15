@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Traits\UploadTrait;
 use Illuminate\Http\Request;
 use App\Product;
 use App\Http\Requests\ProductRequest;
 
 class ProductController extends Controller
 {
+    use UploadTrait;
     private $product;
 
     //Para funcionar se atentar para não usar __constructor e sim construct
@@ -24,8 +26,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-
-        $products = $this->product->paginate(10);
+        $userStore = auth()->user()->store;
+        $products = $userStore->products()->paginate(10);
+//        $products = $this->product->paginate(10);
         return view('admin.products.index', compact('products'));
     }
 
@@ -37,8 +40,9 @@ class ProductController extends Controller
     public function create()
     {
 
-        $stores = \App\Store::all(['id', 'name']);
-        return view('admin.products.create', compact('stores'));
+//        $stores = \App\Store::all(['id', 'name']);
+        $categories = \App\Category::all(['id','name']);
+        return view('admin.products.create', compact('categories'));
     }
 
     /**
@@ -51,10 +55,17 @@ class ProductController extends Controller
     {
         $data = $request->all();
 
-//        $store = \App\Store::find($data['store']);
         $store = auth()->user()->store;
-        $store->products()->create($data);
+        $product = $store->products()->create($data);
 
+        //Abaixo salva os id do produto e da categoria na tabela associativa
+        $product->categories()->sync($data['categories']);
+
+        if($request->hasFile('photos')){ //checa se existe arquivo no campo photos
+            $images = $this->imageUpload($request->file('photos'), 'image');
+            //insert no banco
+            $product->photos()->createMany($images);
+        }
         flash('Produto criado com sucesso')->success();
         return redirect()->route('admin.products.index');
     }
@@ -80,8 +91,9 @@ class ProductController extends Controller
     {
         //$product = $this->product->find($product); Tem que descubrir pq não está funcionando assim.
         $product = $this->product->findOrFail($product);
+        $categories = \App\Category::all(['id','name']);
 
-        return view('admin.products.edit', compact('product'));
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -97,6 +109,12 @@ class ProductController extends Controller
 
         $product = $this->product->find($product);
         $product->update($data);
+        $product->categories()->sync($data['categories']);
+        if($request->hasFile('photos')){ //checa se existe arquivo no campo photos
+            $images = $this->imageUpload($request->file('photos'), 'image');
+            //insert no banco
+            $product->photos()->createMany($images);
+        }
 
         flash('Produto atualizado com sucesso')->success();
         return redirect()->route('admin.products.index');
@@ -116,4 +134,5 @@ class ProductController extends Controller
         flash('Produto removido com sucesso')->success();
         return redirect()->route('admin.products.index');
     }
+
 }
