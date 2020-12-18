@@ -55,11 +55,13 @@ class ProductController extends Controller
     {
         $data = $request->all();
 
+        $categories = $request->get('categories', null); // Resgata o valor que veio do campo ou adiciona null se não encontrar.
+
         $store = auth()->user()->store;
         $product = $store->products()->create($data);
 
         //Abaixo salva os id do produto e da categoria na tabela associativa
-        $product->categories()->sync($data['categories']);
+        $product->categories()->sync($categories);
 
         if($request->hasFile('photos')){ //checa se existe arquivo no campo photos
             $images = $this->imageUpload($request->file('photos'), 'image');
@@ -107,9 +109,15 @@ class ProductController extends Controller
     {
         $data = $request->all();
 
+        $categories = $request->get('categories', null);
+
         $product = $this->product->find($product);
         $product->update($data);
-        $product->categories()->sync($data['categories']);
+
+        if(!is_null($categories)){
+            $product->categories()->sync($categories);
+        }
+
         if($request->hasFile('photos')){ //checa se existe arquivo no campo photos
             $images = $this->imageUpload($request->file('photos'), 'image');
             //insert no banco

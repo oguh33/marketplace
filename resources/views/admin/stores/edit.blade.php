@@ -37,10 +37,6 @@
         </div>
 
     <div class="form-group">
-        <label>Slug</label>
-        <input type="text" name="slug" class="form-control" value="{{$store->slug}}">
-    </div>
-    <div class="form-group">
         <button type="submit" class="btn lg btn-success">Atualizar loja</button>
     </div>
     </form>
