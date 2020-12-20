@@ -42,30 +42,29 @@
                     <a class="nav-link" href="{{route('admin.categories.index')}}">Categorias</a>
                 </li>
             </ul>
+        @endauth
+        <div class="my-2 my-lg-0">
+            <ul class="navbar-nav mr-auto">
+{{--                                    <li class="nav-item">--}}
+{{--                                        <a class="nav-link" href="#" onclick="event.preventDefault(); document.querySelector('form.logout').submit(); ">Sair</a>--}}
 
-            <div class="my-2 my-lg-0">
-                <ul class="navbar-nav mr-auto">
-{{--                    <li class="nav-item">--}}
-{{--                        <a class="nav-link" href="#" onclick="event.preventDefault(); document.querySelector('form.logout').submit(); ">Sair</a>--}}
-
-{{--                        <form action="{{route('logout')}}" class="logout" method="POST" style="display:none;">--}}
-{{--                            @csrf--}}
-{{--                        </form>--}}
-{{--                    </li>--}}
-{{--                    <li class="nav-item">--}}
-{{--                        <span class="nav-link">{{auth()->user()->name}}</span>--}}
-{{--                    </li>--}}
-                    <li class="nav-item">
-                        <a href="{{route('cart.index')}}" class="nav-link">
+{{--                                        <form action="{{route('logout')}}" class="logout" method="POST" style="display:none;">--}}
+{{--                                            @csrf--}}
+{{--                                        </form>--}}
+{{--                                    </li>--}}
+                {{--                    <li class="nav-item">--}}
+                {{--                        <span class="nav-link">{{auth()->user()->name}}</span>--}}
+                {{--                    </li>--}}
+                <li class="nav-item">
+                    <a href="{{route('cart.index')}}" class="nav-link">
                         @if(session()->has('cart'))
                             <span class="badge badge-danger">{{count(session()->get('cart'))}}</span>
                         @endif
-                            <i class="fa fa-shopping-cart"> </i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        @endauth
+                        <i class="fa fa-shopping-cart"> </i>
+                    </a>
+                </li>
+            </ul>
+        </div>
 
     </div>
 </nav>
@@ -74,5 +73,6 @@
     @include('flash::message')
     @yield('content')
 </div>
+@yield('scripts')
 </body>
 </html>

@@ -24,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Schema::defaultStringLength(191); //
+        \PagSeguro\Library::initialize();
+        \PagSeguro\Library::cmsVersion()->setName("Marketplace")->setRelease("1.0.0");
+        \PagSeguro\Library::moduleVersion()->setName("Marketplace")->setRelease("1.0.0");
     }
 }
